@@ -1,0 +1,18 @@
+FROM localhost/box-base:latest
+
+USER root
+
+COPY extra-packages /
+
+# Install common base packages
+RUN grep -v '^#' /extra-packages | \
+    xargs pacman -Syu --needed --noconfirm && \
+    rm /extra-packages
+
+USER build
+WORKDIR /home/build
+COPY extra-aur-packages /home/build
+
+# Install & init yay
+RUN grep -v '^#' /home/build/extra-aur-packages | \
+    xargs yay -S --noconfirm

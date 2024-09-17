@@ -2,7 +2,7 @@
 
 GITHUB_USERNAME="DrStrangeloovee"
 
-echo "Running post container creation setup:"
+echo "Executing initial post container creation setup:"
 
 # Install oh-my-zsh and change shell
 #echo "Installing oh-my-zsh, themes & plugins..."

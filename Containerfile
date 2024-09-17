@@ -26,7 +26,3 @@ RUN git clone https://aur.archlinux.org/yay.git && \
     yay -Y --gendb && \
     grep -v '^#' /home/build/extra-aur-packages | \
     xargs yay -S --noconfirm
-
-# Cleanup after build
-USER root
-RUN userdel -r build
