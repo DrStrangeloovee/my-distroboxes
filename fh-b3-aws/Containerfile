@@ -1,4 +1,4 @@
-FROM localhost/box-base:latest
+FROM localhost/base:latest
 
 USER root
 

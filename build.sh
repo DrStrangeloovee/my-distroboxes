@@ -26,3 +26,5 @@ find "$SCRIPT_DIR" -type d -name ".git" -prune -o -type f -name 'Containerfile' 
     #echo "Found ${CONTAINER_FILE_PATH} with container name ${CONTAINER_NAME}"
     podman build -t ${CONTAINER_NAME} -f ${CONTAINER_FILE_PATH}
 done
+
+distrobox assemble create --file ./distrobox.ini
