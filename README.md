@@ -1,9 +1,20 @@
 # my-distroboxes
 
+TODOS:
+1. Add single run.sh to build all images
+2. Add distrobox.ini to define all containers in a single file
+3. Add chezmoi machine specific dotfiles
+    1. For 3-ai-box add rye shim ([mkdir $ZSH_CUSTOM/plugins/rye
+rye self completion -s zsh > $ZSH_CUSTOM/plugins/rye/_rye](https://rye.astral.sh/guide/installation/#shell-completion))
+
 This repo reflects my personal approach/setup for [distrobox](https://github.com/89luca89/distrobox) & [podman](https://github.com/containers/podman).  
 All images stem from the same base (`Containerfile.base`) which initializes
 * the distribution [toolbx/arch-toolbox:latest](https://quay.io/repository/toolbx/arch-toolbox)
 * Base packages
+
+## Prerequisites:
+* To keep the home directories of each container separated from the hosts home I prefer to set a directory for it. This can be easily done by setting the `DBX_CONTAINER_HOME_PREFIX` (this is done automatically when running the `create.sh` script) environment variable.
+* Access to a git repository/needed ssh keys ([see](sharing-the-host-ssh-agent)) has to be provided before running the container specific init scripts. Otherwise some settings/environment variables are missing - this can be fixed by re-running the init script with access to the repository.
 
 ## Usage
 
@@ -17,8 +28,10 @@ podman build -t $IMAGE_NAME -f Containerfile
 
 ### Create the container from built image
 
+This will create the specified image with the defined path for the home directory.
+
 ```bash
-distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/Distrobox/$CONTAINER_NAME --volume $SSH_AUTH_SOCK:$SSH_AUTH_SOCK:Z --additional-flags "--env SSH_AUTH_SOCK:{$SSH_AUTH_SOCK}"
+distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/Distrobox/$CONTAINER_NAME --volume $SSH_AUTH_SOCK:$SSH_AUTH_SOCK:Z --additional-flags "--env SSH_AUTH_SOCK:{$SSH_AUTH_SOCK}" --volume ~/Dev::rw
 ```
 
 ### Finish the setup
@@ -27,7 +40,7 @@ distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/D
 distrobox enter $CONTAINER_NAME
 ```
 
-To complete the setup you have to run the `init.sh` script from inside of the container and afterwards you have to exit and enter it again. The script will fetch dotfiles from GitHub using [chezmoi](https://www.chezmoi.io/) and may need SSH keys to access the repository - see [this](sharing-the-host-ssh-agent) how this is simplified here.
+To complete the setup you have to run the `init.sh` script from inside of the container and afterwards you have to exit and enter it again.
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/DrStrangeloovee/my-distroboxes/master/init.sh)"
