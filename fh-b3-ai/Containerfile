@@ -7,8 +7,8 @@ FROM localhost/base:latest
 
 # Install common base packages
 #RUN grep -v '^#' /packages | \
-    xargs pacman -Syyu --needed --noconfirm && \
-    rm /packages
+#    xargs pacman -Syyu --needed --noconfirm && \
+#    rm /packages
 
 USER build
 WORKDIR /home/build
