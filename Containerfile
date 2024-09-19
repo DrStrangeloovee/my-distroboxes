@@ -1,11 +1,11 @@
 FROM quay.io/toolbx/arch-toolbox:latest
 
-COPY extra-packages /
+COPY packages /
 
 # Install common base packages
-RUN grep -v '^#' /extra-packages | \
+RUN grep -v '^#' /packages | \
     xargs pacman -Syyu --needed --noconfirm && \
-    rm /extra-packages
+    rm /packages
 
 # Link commands back to the host
 RUN  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman
@@ -17,12 +17,12 @@ RUN  useradd -m --shell=/bin/bash build && usermod -L build && \
 
 USER build
 WORKDIR /home/build
-COPY extra-aur-packages /home/build
+COPY aur-packages /home/build
 
 # Install & init yay
 RUN git clone https://aur.archlinux.org/yay.git && \
     cd yay && \
     makepkg -si --noconfirm && \
     yay -Y --gendb && \
-    grep -v '^#' /home/build/extra-aur-packages | \
+    grep -v '^#' /home/build/aur-packages | \
     xargs yay -S --noconfirm
