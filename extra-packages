@@ -5,6 +5,7 @@ bat
 chezmoi
 cosign
 direnv
+emacs-wayland
 eza
 ffmpeg
 fzf
