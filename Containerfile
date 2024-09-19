@@ -4,7 +4,7 @@ COPY extra-packages /
 
 # Install common base packages
 RUN grep -v '^#' /extra-packages | \
-    xargs pacman -Syu --needed --noconfirm && \
+    xargs pacman -Syyu --needed --noconfirm && \
     rm /extra-packages
 
 # Link commands back to the host
