@@ -1,13 +1,6 @@
 # my-distroboxes
 
-TODOS:
-1. Add single run.sh to build all images
-2. Add distrobox.ini to define all containers in a single file
-3. Add chezmoi machine specific dotfiles
-    1. For 3-ai-box add rye shim ([mkdir $ZSH_CUSTOM/plugins/rye
-rye self completion -s zsh > $ZSH_CUSTOM/plugins/rye/_rye](https://rye.astral.sh/guide/installation/#shell-completion))
-
-This repo reflects my personal approach/setup for [distrobox](https://github.com/89luca89/distrobox) & [podman](https://github.com/containers/podman).  
+This repo reflects my personal approach/setup for [distrobox](https://github.com/89luca89/distrobox) & [podman](https://github.com/containers/podman) and tries to automate this process as much as possible.  
 All images stem from the same base (`Containerfile.base`) which initializes
 * the distribution [toolbx/arch-toolbox:latest](https://quay.io/repository/toolbx/arch-toolbox)
 * Base packages
@@ -18,6 +11,10 @@ All images stem from the same base (`Containerfile.base`) which initializes
 
 ## Usage
 
+Most of the process is automated by executing the `./build.sh` which builds all the images and then creates the defined containers according to the `distrobox.ini`.
+
+The following steps describe the steps which you could go trhough manually.
+
 ### Build the image
 
 It is recommended to first build the base image and the subsequently build all other child images.
@@ -26,9 +23,9 @@ It is recommended to first build the base image and the subsequently build all o
 podman build -t $IMAGE_NAME -f Containerfile
 ```
 
-### Create the container from built image
+### Create the container from an image
 
-This will create the specified image with the defined path for the home directory.
+This will create the specified image with the defined path for the home directory and the hosts ssh authentication agent is passed into the container.
 
 ```bash
 distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/Distrobox/$CONTAINER_NAME --volume $SSH_AUTH_SOCK:$SSH_AUTH_SOCK:Z --additional-flags "--env SSH_AUTH_SOCK:{$SSH_AUTH_SOCK}" --volume ~/Dev::rw
@@ -74,3 +71,16 @@ distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/D
 
 Note:
 Check that the container user (the one distrobox creates for you) shares the same UID - otherwise you will almost certainly run into issues. (TODO: document/find solution for this)
+
+# Open improvements
+
+The following is a list of open improvements which further automate the setup:
+
+1. If the user enters the container the first time he should get a message that the container can be setup by running the `init.sh` or it could be baked in the container image.
+2. Add chezmoi [machine specific](https://www.chezmoi.io/user-guide/manage-machine-to-machine-differences/) dotfiles
+3. Setup gitconfig (via chezmoi?)
+4. For fh-b3-ai the rye shim ([mkdir $ZSH_CUSTOM/plugins/rye
+rye self completion -s zsh > $ZSH_CUSTOM/plugins/rye/_rye](https://rye.astral.sh/guide/installation/#shell-completion)) can't be set because the $ZSH_CUSTOM variable is not available - this has to be run under an active zsh session.
+5. Setup zsh completions
+    4.1. [ripgrep](https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md#complete)
+6. Automate VSCode plugin install/setup
