@@ -2,12 +2,14 @@
 
 This repo reflects my personal approach/setup for [distrobox](https://github.com/89luca89/distrobox) & [podman](https://github.com/containers/podman) and tries to automate this process as much as possible.  
 All images stem from the same base (`Containerfile.base`) which initializes
-* the distribution [toolbx/arch-toolbox:latest](https://quay.io/repository/toolbx/arch-toolbox)
-* Base packages
+
+- the distribution [toolbx/arch-toolbox:latest](https://quay.io/repository/toolbx/arch-toolbox)
+- Base packages
 
 ## Prerequisites:
-* To keep the home directories of each container separated from the hosts home I prefer to set a directory for it. This can be easily done by setting the `DBX_CONTAINER_HOME_PREFIX` (this is done automatically when running the `create.sh` script) environment variable.
-* Access to a git repository/needed ssh keys ([see](sharing-the-host-ssh-agent)) has to be provided before running the container specific init scripts. Otherwise some settings/environment variables are missing - this can be fixed by re-running the init script with access to the repository.
+
+- To keep the home directories of each container separated from the hosts home I prefer to set a directory for it. This can be easily done by setting the `DBX_CONTAINER_HOME_PREFIX` (this is done automatically when running the `create.sh` script) environment variable.
+- Access to a git repository/needed ssh keys ([see](sharing-the-host-ssh-agent)) has to be provided before running the container specific init scripts. Otherwise some settings/environment variables are missing - this can be fixed by re-running the init script with access to the repository.
 
 ## Usage
 
@@ -61,9 +63,10 @@ Consult the distrobox [documentation](https://distrobox.it/posts/execute_command
 ## Sharing the host ssh agent
 
 To simplify ssh access the hosts ssh-agent is passed into the container by
+
 1. Mounting the socket into it.
 2. Setting the $SSH_AUTH_SOCKET variable.
-at the creation of the container. This gives you the benefit of storing your keys on the host and make them available to all containers at once - even works through KeePass with its ssh-agent integration.
+   at the creation of the container. This gives you the benefit of storing your keys on the host and make them available to all containers at once - even works through KeePass with its ssh-agent integration.
 
 ```bash
 distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/Distrobox/$CONTAINER_NAME --volume $SSH_AUTH_SOCK:$SSH_AUTH_SOCK:Z --additional-flags "--env SSH_AUTH_SOCK:{$SSH_AUTH_SOCK}"
@@ -79,8 +82,7 @@ The following is a list of open improvements which further automate the setup:
 1. If the user enters the container the first time he should get a message that the container can be setup by running the `init.sh` or it could be baked in the container image.
 2. Add chezmoi [machine specific](https://www.chezmoi.io/user-guide/manage-machine-to-machine-differences/) dotfiles
 3. Setup gitconfig (via chezmoi?)
-4. For fh-b3-ai the rye shim ([mkdir $ZSH_CUSTOM/plugins/rye
-rye self completion -s zsh > $ZSH_CUSTOM/plugins/rye/_rye](https://rye.astral.sh/guide/installation/#shell-completion)) can't be set because the $ZSH_CUSTOM variable is not available - this has to be run under an active zsh session.
+4. Regarding tooling it is preferred to use [mise](https://mise.jdx.dev/) and install the needed toolchains manually - maybe this could be automated
 5. Setup zsh completions
-    4.1. [ripgrep](https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md#complete)
+   4.1. [ripgrep](https://github.com/BurntSushi/ripgrep/blob/master/FAQ.md#complete)
 6. Automate VSCode plugin install/setup
