@@ -17,6 +17,10 @@ echo "Executing initial post container creation setup:"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
+# Install mise dev tooling
+echo "Installing mise..."
+curl https://mise.run | sh
+
 # Chezmoi init --apply
 echo "Fetching dotfiles..."
 chezmoi init --apply git@github.com:$github_user/dotfiles.git
