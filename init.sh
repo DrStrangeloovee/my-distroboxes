@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Exit if outside of container
-
 if [ -z ${CONTAINER_ID+x} ]; then
     echo "ERROR: This script is intended to be run inside of a container!"
     exit 1
