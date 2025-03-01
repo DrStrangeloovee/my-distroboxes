@@ -4,11 +4,13 @@ COPY packages /
 
 # Install common base packages
 RUN grep -v '^#' /packages | \
-    xargs pacman -Syyu --needed --noconfirm && \
+    xargs pacman -Sy --noconfirm archlinux-keyring && pacman-key --init && pacman-key --populate && \
+    pacman -Syyu --needed --noconfirm && \
     rm /packages
 
 # Link commands back to the host
-RUN  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman
+RUN  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
+     ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman-compose
 
 # Create separate build user to handle installation from source
 RUN  useradd -m --shell=/bin/bash build && usermod -L build && \
