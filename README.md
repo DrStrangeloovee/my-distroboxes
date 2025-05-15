@@ -9,13 +9,17 @@ All images stem from the same base (`Containerfile.base`) which initializes
 ## Prerequisites:
 
 - To keep the home directories of each container separated from the hosts home I prefer to set a directory for it. This can be easily done by setting the `DBX_CONTAINER_HOME_PREFIX` (this is done automatically when running the `create.sh` script) environment variable.
-- Access to a git repository/needed ssh keys ([see](sharing-the-host-ssh-agent)) has to be provided before running the container specific init scripts. Otherwise some settings/environment variables are missing - this can be fixed by re-running the init script with access to the repository.
+- Access to a git repository/needed ssh keys ([see](sharing-the-host-ssh-agent)) has to be provided before running the container specific init scripts. Otherwise, some settings/environment variables are missing - this can be fixed by re-running the init script with access to the repository.
+- The latest version of the base toolbox image:
+```bash
+podman pull quay.io/toolbx/arch-toolbox:latest
+```
 
 ## Usage
 
 Most of the process is automated by executing the `./build.sh` which builds all the images and then creates the defined containers according to the `distrobox.ini`.
 
-The following steps describe the steps which you could go trhough manually.
+The following steps describe the steps which you could go through manually.
 
 ### Build the image
 
@@ -39,7 +43,7 @@ distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/D
 distrobox enter $CONTAINER_NAME
 ```
 
-To complete the setup you have to run the `init.sh` script from inside of the container and afterwards you have to exit and enter it again.
+To complete the setup you have to run the `init.sh` script from inside the container and afterward you have to exit and enter it again.
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/DrStrangeloovee/my-distroboxes/master/init.sh)"
@@ -47,7 +51,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/DrStrangeloovee/my-distrob
 
 ## A note on linking programs
 
-I find it useful to be able to be able to use podman from the host system - wheter or not you need that is up to you and differs from each use case. Feel free to change this as needed.  
+I find it useful to be able to be able to use Podman from the host system - whether you need that is up to you and differs from each use case. Feel free to change this as needed.  
 What you will often see is something like the following:
 
 ```Dockerfile
@@ -73,13 +77,13 @@ distrobox create --name $CONTAINER_NAME --image localhost/$IMAGE_NAME --home ~/D
 ```
 
 Note:
-Check that the container user (the one distrobox creates for you) shares the same UID - otherwise you will almost certainly run into issues. (TODO: document/find solution for this)
+Check that the container user (the one Distrobox creates for you) shares the same UID - otherwise you will almost certainly run into issues. (TODO: document/find solution for this)
 
 # Open improvements
 
 The following is a list of open improvements which further automate the setup:
 
-1. If the user enters the container the first time he should get a message that the container can be setup by running the `init.sh` or it could be baked in the container image.
+1. If the user enters the container the first time he should get a message that the container can be setup by running the `init.sh`, or it could be baked in the container image.
 2. Add chezmoi [machine specific](https://www.chezmoi.io/user-guide/manage-machine-to-machine-differences/) dotfiles
 3. Setup gitconfig (via chezmoi?)
 4. Regarding tooling it is preferred to use [mise](https://mise.jdx.dev/) and install the needed toolchains manually - maybe this could be automated
