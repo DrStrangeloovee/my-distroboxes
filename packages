@@ -18,8 +18,6 @@ ncurses
 neovim
 plocate
 ripgrep
-typst
-typst-lsp
 wl-clipboard
 zellij
 zoxide
